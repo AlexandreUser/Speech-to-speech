@@ -44,6 +44,14 @@ function Play() {
         "pesquise :pergunta": function (p) {
           alert(p);
         },
+        "me leve ao :site": function (site) {
+          if (site === "Google") {
+            window.location.href = "http://www.google.com.br";
+          }
+          if (site === "YouTube") {
+            window.location.href = "http://www.youtube.com.br";
+          }
+        },
       };
 
       // Add our commands to annyang
