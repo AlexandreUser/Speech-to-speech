@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
-import logo from "./logo.svg";
+
 import "./App.css";
 import oi from "./audio/oi.mp3";
 import name from "./audio/apresentação.mp3";
@@ -9,10 +9,13 @@ import help from "./audio/ajuda_2.mp3";
 import opinion from "./audio/pergunta_opinião.mp3";
 import naoSei from "./audio/nao_sei.mp3";
 import sim from "./audio/sim.mp3";
-
+import bomDia from "./audio/corrigir_boa_tarde.mp3";
+import Jarvis from "./components/ui";
 import annyang from "annyang";
 function Play() {
   const [audio, setAudio] = useState(silence);
+  const [myInterval, setMyInteral] = useState("");
+
   function HearVoice() {
     if (annyang) {
       annyang.setLanguage("pt-BR");
@@ -22,6 +25,12 @@ function Play() {
       var commands = {
         oi: function () {
           setAudio(oi);
+        },
+        olá: function () {
+          setAudio(oi);
+        },
+        "bom dia": function () {
+          setAudio(bomDia);
         },
         "qual o seu nome": function () {
           setAudio(name);
@@ -87,12 +96,34 @@ function Play() {
     <div>
       <audio
         className="audio-element"
+        onPlay={() => {}}
         onEnded={() => {
           let audioEl = document.getElementsByClassName("audio-element")[0];
-          audioEl.src = audio;
+          if (audio !== silence) {
+            let size = 55;
 
+            setMyInteral(
+              setInterval(() => {
+                document.getElementsByClassName("circles")[0].style.width =
+                  size + "vmin";
+                document.getElementsByClassName("circles")[0].style.height =
+                  size + "vmin";
+                if (size > 70) {
+                  size = 55;
+                }
+                size += 5;
+              }, 100)
+            );
+          }
+          audioEl.src = audio;
           audioEl.play();
+
           setAudio(silence);
+
+          clearInterval(myInterval);
+
+          document.getElementsByClassName("circles")[0].style.width = "50vmin";
+          document.getElementsByClassName("circles")[0].style.height = "50vmin";
         }}
       >
         <source src={oi}></source>
@@ -103,23 +134,10 @@ function Play() {
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+      <Jarvis />
       <Play />
-    </div>
+    </>
   );
 }
 
